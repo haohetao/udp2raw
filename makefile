@@ -2,7 +2,8 @@ cc_cross=/home/wangyu/Desktop/arm-2014.05/bin/arm-none-linux-gnueabi-g++
 cc_local=g++
 cc_mips24kc_be=/toolchains/lede-sdk-17.01.2-ar71xx-generic_gcc-5.4.0_musl-1.1.16.Linux-x86_64/staging_dir/toolchain-mips_24kc_gcc-5.4.0_musl-1.1.16/bin/mips-openwrt-linux-musl-g++
 cc_mips24kc_le=/toolchains/lede-sdk-17.01.2-ramips-mt7621_gcc-5.4.0_musl-1.1.16.Linux-x86_64/staging_dir/toolchain-mipsel_24kc_gcc-5.4.0_musl-1.1.16/bin/mipsel-openwrt-linux-musl-g++
-cc_arm= /opt/toolchains/openwrt-toolchain-23.05.3-bcm53xx-generic_gcc-12.3.0_musl_eabi.Linux-x86_64/toolchain-arm_cortex-a9_gcc-12.3.0_musl_eabi/bin/arm-openwrt-linux-c++
+cc_arm=/opt/toolchains/openwrt-toolchain-23.05.3-bcm53xx-generic_gcc-12.3.0_musl_eabi.Linux-x86_64/toolchain-arm_cortex-a9_gcc-12.3.0_musl_eabi/bin/arm-openwrt-linux-c++
+cc_arm64=/opt/toolchains/openwrt-toolchain-rockchip-armv8_gcc-13.3.0_musl.Linux-x86_64/toolchain-aarch64_generic_gcc-13.3.0_musl/bin/aarch64-openwrt-linux-c++
 cc_mingw_cross=i686-w64-mingw32-g++-posix
 cc_mac_cross=o64-clang++ -stdlib=libc++
 cc_x86=/toolchains/lede-sdk-17.01.2-x86-generic_gcc-5.4.0_musl-1.1.16.Linux-x86_64/staging_dir/toolchain-i386_pentium4_gcc-5.4.0_musl-1.1.16/bin/i486-openwrt-linux-c++
@@ -23,7 +24,7 @@ MP="-DUDP2RAW_MP"
 
 NAME=udp2raw
 
-TARGETS=amd64 arm amd64_hw_aes arm_asm_aes
+TARGETS=amd64 arm arm64 amd64_hw_aes arm_asm_aes arm64_asm_aes
 
 TAR=${NAME}_binaries.tar.gz `echo ${TARGETS}|sed -r 's/([^ ]+)/${NAME}_\1/g'` version.txt
 
@@ -84,7 +85,10 @@ arm:git_version
 	${cc_arm}   -o ${NAME}_$@      -I. ${SOURCES} ${FLAGS} -lrt -static -O2 -lgcc_eh
 arm_asm_aes:git_version
 	${cc_arm}   -o ${NAME}_$@    -I. ${SOURCES_AES_ACC} ${FLAGS} -lrt -static -O2 lib/aes_acc/asm/arm.S -lgcc_eh
-
+arm64:git_version
+	${cc_arm64}   -o ${NAME}_$@      -I. ${SOURCES} ${FLAGS} -lrt -static -O2 -lgcc_eh
+arm64_asm_aes:git_version
+	${cc_arm64}   -o ${NAME}_$@    -I. ${SOURCES_AES_ACC} ${FLAGS} -lrt -static -O2 lib/aes_acc/asm/arm64.S -lgcc_eh
 release: ${TARGETS}
 	cp git_version.h version.txt
 	tar -zcvf ${TAR}
