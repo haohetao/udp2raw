@@ -13,7 +13,7 @@
 #include "fd_manager.h"
 
 int hb_mode = 1;
-int hb_len = 1200;
+int hb_len = 0;
 char hb_buf[buf_len];
 
 int mtu_warn = 1375;  // if a packet larger than mtu warn is receviced,there will be a warning
